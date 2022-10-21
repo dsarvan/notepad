@@ -1,6 +1,11 @@
 package main
 
-import "fyne.io/fyne/v2/app"
+import (
+	"fyne.io/fyne"
+	"fyne.io/fyne/theme"
+	"fyne.io/fyne/v2/app"
+	"fyne.io/fyne/widget"
+)
 
 func loadUI() fyne.CanvasObject {
 
