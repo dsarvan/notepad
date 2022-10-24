@@ -10,17 +10,23 @@ import (
 
 func loadUI() fyne.CanvasObject {
 
+	notecontent := widget.NewMultiLineEntry()
+
 	list := widget.NewVBox(
-		widget.NewLabel("Note 1"),
-		widget.NewLabel("Note 2"),
+		widget.NewButton("Note 1", func() {
+			notecontent.SetText("Note 1")
+		}),
+		widget.NewButton("Note 2", func() {
+			notecontent.SetText("Note 2")
+		}),
 	)
+
 	toolbar := widget.NewToolbar(
 		widget.NewToolbarAction(theme.ContentAddIcon(), func() {}),
 		widget.NewToolbarAction(theme.ContentRemoveIcon(), func() {}),
 	)
 
 	titlelist := fyne.NewContainerWithLayout(layout.NewBorderLayout(toolbar, nil, nil, nil), toolbar, list)
-	notecontent := widget.NewMultiLineEntry()
 
 	split := widget.NewHSplitContainer(titlelist, notecontent)
 	split.Offset = 0.25
