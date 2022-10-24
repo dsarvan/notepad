@@ -21,7 +21,11 @@ func loadUI() fyne.CanvasObject {
 
 	titlelist := fyne.NewContainerWithLayout(layout.NewBorderLayout(toolbar, nil, nil, nil), toolbar, list)
 	notecontent := widget.NewMultiLineEntry()
-	return widget.NewHSplitContainer(titlelist, notecontent)
+
+	split := widget.NewHSplitContainer(titlelist, notecontent)
+	split.Offset = 0.25
+
+	return split
 }
 
 func main() {
