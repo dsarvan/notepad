@@ -30,9 +30,17 @@ func loadUI(notes []*note) fyne.CanvasObject {
 	list := widget.NewVBox()
 	for _, n := range notes {
 		thisNote := n
-		list.Append(widget.NewButton(n.title(), func() {
+
+		notelabel := widget.NewButton(n.title(), func() {
 			setNote(thisNote)
-		}))
+		})
+
+		// highlight the label of the selected note
+		if n == current {
+			notelabel.Style = widget.PrimaryButton
+		}
+
+		list.Append(notelabel)
 	}
 
 	toolbar := widget.NewToolbar(
