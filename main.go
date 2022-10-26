@@ -8,23 +8,23 @@ import (
 	"fyne.io/fyne/widget"
 )
 
-var (
+type ui struct {
 	current     *note
 	notecontent *widget.Entry
-)
+}
 
-func setNote(n *note) {
-	notecontent.SetText(n.content)
-	current = n
+func (u *ui) setNote(n *note) {
+	u.notecontent.SetText(n.content)
+	u.current = n
 }
 
 func loadUI(notes []*note) fyne.CanvasObject {
 
-	notecontent = widget.NewMultiLineEntry()
+	u := &ui{notecontent: widget.NewMultiLineEntry()}
 
 	// show the Note 1 content by default
 	if len(notes) > 0 {
-		setNote(notes[0])
+		u.setNote(notes[0])
 	}
 
 	list := widget.NewVBox()
@@ -32,11 +32,11 @@ func loadUI(notes []*note) fyne.CanvasObject {
 		thisNote := n
 
 		notelabel := widget.NewButton(n.title(), func() {
-			setNote(thisNote)
+			u.setNote(thisNote)
 		})
 
 		// highlight the label of the selected note
-		if n == current {
+		if n == u.current {
 			notelabel.Style = widget.PrimaryButton
 		}
 
@@ -50,7 +50,7 @@ func loadUI(notes []*note) fyne.CanvasObject {
 
 	titlelist := fyne.NewContainerWithLayout(layout.NewBorderLayout(toolbar, nil, nil, nil), toolbar, list)
 
-	split := widget.NewHSplitContainer(titlelist, notecontent)
+	split := widget.NewHSplitContainer(titlelist, u.notecontent)
 	split.Offset = 0.25
 
 	return split
