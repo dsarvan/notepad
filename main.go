@@ -8,15 +8,30 @@ import (
 	"fyne.io/fyne/widget"
 )
 
+var (
+	current     *note
+	notecontent *widget.Entry
+)
+
+func setNote(n *note) {
+	notecontent.SetText(n.content)
+	current = n
+}
+
 func loadUI(notes []*note) fyne.CanvasObject {
 
-	notecontent := widget.NewMultiLineEntry()
+	notecontent = widget.NewMultiLineEntry()
+
+	// show the Note 1 content by default
+	if len(notes) > 0 {
+		setNote(notes[0])
+	}
 
 	list := widget.NewVBox()
 	for _, n := range notes {
 		thisNote := n
 		list.Append(widget.NewButton(n.title(), func() {
-			notecontent.SetText(thisNote.content)
+			setNote(thisNote)
 		}))
 	}
 
