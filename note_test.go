@@ -14,4 +14,8 @@ func testNoteTitle(t *testing.T) {
 	// let first line of the text be called title
 	tnote = &note{content: "Note\nLine2"}
 	assert.Equal(t, "Note", tnote.title())
+
+	// no content on the note
+	tnote = &note{content: " "}
+	assert.Equal(t, "Untitled", tnote.title())
 }
