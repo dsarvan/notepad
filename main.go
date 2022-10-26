@@ -8,18 +8,17 @@ import (
 	"fyne.io/fyne/widget"
 )
 
-func loadUI() fyne.CanvasObject {
+func loadUI(notes []*note) fyne.CanvasObject {
 
 	notecontent := widget.NewMultiLineEntry()
 
-	list := widget.NewVBox(
-		widget.NewButton("Note 1", func() {
-			notecontent.SetText("Note 1")
-		}),
-		widget.NewButton("Note 2", func() {
-			notecontent.SetText("Note 2")
-		}),
-	)
+	list := widget.NewVBox()
+	for _, n := range notes {
+		thisNote := n
+		list.Append(widget.NewButton(n.title(), func() {
+			notecontent.SetText(thisNote.content)
+		}))
+	}
 
 	toolbar := widget.NewToolbar(
 		widget.NewToolbarAction(theme.ContentAddIcon(), func() {}),
@@ -38,6 +37,12 @@ func main() {
 	a := app.New()
 	w := a.NewWindow("Notepad")
 
-	w.SetContent(loadUI())
+	// list of notes
+	notelist := []*note{
+		{content: "Note 1\nContent 1"},
+		{content: "Note 2\nContent 2"},
+	}
+
+	w.SetContent(loadUI(notelist))
 	w.ShowAndRun()
 }
