@@ -9,26 +9,22 @@ import (
 )
 
 type ui struct {
-	current     *note
-	notecontent *widget.Entry
+	current *note   // current note
+	notes   []*note // notes list
+
+	notecontent *widget.Entry // user interface components
+	list        *widget.Box   // highlight the selected label
 }
 
 func (u *ui) setNote(n *note) {
 	u.notecontent.SetText(n.content)
 	u.current = n
+	u.refreshList(u.notes)
 }
 
-func loadUI(notes []*note) fyne.CanvasObject {
-
-	u := &ui{notecontent: widget.NewMultiLineEntry()}
-
-	// show the Note 1 content by default
-	if len(notes) > 0 {
-		u.setNote(notes[0])
-	}
-
-	list := widget.NewVBox()
-	for _, n := range notes {
+func (u *ui) refreshList(notes []*note) {
+	u.list.Children = nil
+	for _, n := range u.notes {
 		thisNote := n
 
 		notelabel := widget.NewButton(n.title(), func() {
@@ -40,7 +36,21 @@ func loadUI(notes []*note) fyne.CanvasObject {
 			notelabel.Style = widget.PrimaryButton
 		}
 
-		list.Append(notelabel)
+		u.list.Append(notelabel)
+	}
+}
+
+func loadUI(notes []*note) fyne.CanvasObject {
+
+	u := &ui{notes: notes, notecontent: widget.NewMultiLineEntry()}
+
+	// highlight the selected label
+	u.list = widget.NewVBox()
+	u.refreshList(notes)
+
+	// show the Note 1 content by default
+	if len(notes) > 0 {
+		u.setNote(notes[0])
 	}
 
 	toolbar := widget.NewToolbar(
@@ -48,7 +58,7 @@ func loadUI(notes []*note) fyne.CanvasObject {
 		widget.NewToolbarAction(theme.ContentRemoveIcon(), func() {}),
 	)
 
-	titlelist := fyne.NewContainerWithLayout(layout.NewBorderLayout(toolbar, nil, nil, nil), toolbar, list)
+	titlelist := fyne.NewContainerWithLayout(layout.NewBorderLayout(toolbar, nil, nil, nil), toolbar, u.list)
 
 	split := widget.NewHSplitContainer(titlelist, u.notecontent)
 	split.Offset = 0.25
