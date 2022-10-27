@@ -40,17 +40,17 @@ func (u *ui) refreshList(notes []*note) {
 	}
 }
 
-func loadUI(notes []*note) fyne.CanvasObject {
+func (u *ui) loadUI() fyne.CanvasObject {
 
-	u := &ui{notes: notes, notecontent: widget.NewMultiLineEntry()}
+	u.notecontent = widget.NewMultiLineEntry()
 
 	// highlight the selected label
 	u.list = widget.NewVBox()
-	u.refreshList(notes)
+	u.refreshList(u.notes)
 
 	// show the Note 1 content by default
-	if len(notes) > 0 {
-		u.setNote(notes[0])
+	if len(u.notes) > 0 {
+		u.setNote(u.notes[0])
 	}
 
 	toolbar := widget.NewToolbar(
@@ -76,6 +76,7 @@ func main() {
 		{content: "Note 2\nContent 2"},
 	}
 
-	w.SetContent(loadUI(notelist))
+	notesUI := &ui{notes: notelist}
+	w.SetContent(notesUI.loadUI())
 	w.ShowAndRun()
 }
